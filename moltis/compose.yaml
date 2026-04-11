@@ -1,0 +1,39 @@
+services:
+  moltis:
+    image: ghcr.io/moltis-org/moltis:latest
+    restart: unless-stopped
+    user: "0:0"
+    command:
+      - --bind
+      - 0.0.0.0
+      - --port
+      - "13131"
+      - --no-tls
+    environment:
+      MOLTIS_PASSWORD: ${MOLTIS_PASSWORD:?set in .env}
+      MOLTIS_NO_TLS: "true"
+      MOLTIS_BEHIND_PROXY: "true"
+      MOLTIS_CONFIG_DIR: /data/config
+      MOLTIS_DATA_DIR: /data
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - /var/lib/moltis:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD-SHELL", "curl -Ssf http://127.0.0.1:13131/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    x-caddy: |
+      moltis.yusoofsh.cloud {
+          reverse_proxy {{upstreams 13131}} {
+              import common_proxy
+          }
+          log
+      }
+    # Uncomment this only if you specifically need browser-based OAuth callbacks
+    # from remote devices and are okay exposing the callback port directly.
+    # x-ports:
+    #   - 1455:1455/tcp@host

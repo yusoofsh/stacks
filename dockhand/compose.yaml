@@ -1,0 +1,17 @@
+services:
+  dockhand:
+    image: fnsys/dockhand:latest
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /var/lib/dockhand
+      HOST_DATA_DIR: /var/lib/dockhand
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/dockhand:/var/lib/dockhand
+    x-caddy: |
+      dockhand.yusoofsh.cloud {
+          reverse_proxy {{upstreams 3000}} {
+              import common_proxy
+          }
+          log
+      }

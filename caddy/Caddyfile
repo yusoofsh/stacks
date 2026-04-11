@@ -1,0 +1,19 @@
+# Obtain a wildcard TLS certificate for all subdomains of example.name using DNS challenge with Cloudflare.
+# It will be used for services that publish ports with hostnames under example.name.
+{
+  acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  servers {
+		trusted_proxies cloudflare
+		client_ip_headers Cf-Connecting-Ip
+	}
+}
+
+yusoofsh.cloud {
+  redir https://www.yusoofsh.id{uri} permanent
+}
+
+*.yusoofsh.cloud {
+  handle {
+    respond "No host matched" 404
+  }
+}
