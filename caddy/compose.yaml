@@ -1,7 +1,12 @@
 services:
   caddy:
-    image: caddybuilds/caddy-cloudflare:alpine
-    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    image: caddy:latest
+    pull_policy: never
     command: caddy run -c /config/Caddyfile
     cap_add:
       - NET_ADMIN
