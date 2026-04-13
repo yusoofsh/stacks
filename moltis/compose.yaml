@@ -28,10 +28,7 @@ services:
       start_period: 20s
     x-caddy: |
       moltis.yusoofsh.cloud {
-          reverse_proxy {{upstreams 13131}} {
-              import common_proxy
-          }
-          log
+        reverse_proxy {{upstreams 13131}}
       }
     # Uncomment this only if you specifically need browser-based OAuth callbacks
     # from remote devices and are okay exposing the callback port directly.

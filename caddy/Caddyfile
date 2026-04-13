@@ -3,9 +3,19 @@
 {
   acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
   servers {
-		trusted_proxies cloudflare
-		client_ip_headers Cf-Connecting-Ip
-	}
+    trusted_proxies cloudflare {
+      interval 12h
+      timeout 15s
+    }
+    client_ip_headers Cf-Connecting-Ip
+  }
+  layer4 {
+    :853 {
+      route {
+        proxy 127.0.0.1:853
+      }
+    }
+  }
 }
 
 yusoofsh.cloud {

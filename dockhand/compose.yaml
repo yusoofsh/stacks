@@ -10,8 +10,5 @@ services:
       - /var/lib/dockhand:/var/lib/dockhand
     x-caddy: |
       dockhand.yusoofsh.cloud {
-          reverse_proxy {{upstreams 3000}} {
-              import common_proxy
-          }
-          log
+        reverse_proxy {{upstreams 3000}}
       }
